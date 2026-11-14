@@ -1,0 +1,26 @@
+{
+  "port": "/dev/serial/by-id/REPLACE_WITH_WAVESHARE_ESP32_DRIVER",
+  "baud": 115200,
+  "yaw": {
+    "id": 1,
+    "center": 2048,
+    "min": 1024,
+    "max": 3072,
+    "direction": 1
+  },
+  "pitch": {
+    "id": 2,
+    "center": 2048,
+    "min": 1536,
+    "max": 2560,
+    "direction": -1
+  },
+  "motion": {
+    "speed": 250,
+    "acceleration": 20,
+    "keyboard_step": 32,
+    "vr_gain": 1.0,
+    "smoothing_alpha": 0.25,
+    "deadband_degrees": 0.5
+  }
+}

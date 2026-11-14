@@ -32,6 +32,7 @@ Free-form phrases use local Ollama (`bash scripts/start_ollama.sh pull`, model `
 | `robot_bridge/` | HTTP API, teleop page, chassis + arm drivers |
 | `agent/` | Language loop + OpenClaw skill (HTTP only) |
 | `config/ports.yaml` | Feetech serial map |
+| [`vr_gimbal/`](vr_gimbal/) | STS3215 yaw/pitch gimbal: keyboard test + VR pose stream |
 | `docs/` | Architecture, e-stop, task list |
 | `scripts/` | Bring-up, port detect, LeRobot install/calibrate |
 | `sim/` | Optional SO-ARM MuJoCo (not the full vehicle) |
@@ -39,6 +40,11 @@ Free-form phrases use local Ollama (`bash scripts/start_ollama.sh pull`, model `
 ## Safety
 
 `POST /stop` zeros the base and disconnects arm buses. `cmd_vel` times out in 500 ms. Do not expose port 8080 to the public internet.
+
+The VR gimbal is intentionally standalone while its mechanical limits and
+Waveshare adapter are being commissioned. Start with the
+[`vr_gimbal` safety and keyboard guide](vr_gimbal/README.md); do not add it to
+automatic bring-up until both axes have verified IDs, directions and limits.
 
 ## License
 
