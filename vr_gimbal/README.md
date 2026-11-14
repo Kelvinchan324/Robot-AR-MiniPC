@@ -1,13 +1,21 @@
 # VR gimbal
 
 This section controls Robot AR's two-axis camera gimbal through the Waveshare
-**Servo Driver with ESP32** and two Feetech STS3215 servos. The first test uses
-the keyboard. The same controller also accepts streamed VR yaw/pitch values.
+**Bus Servo Adapter (A)** and two Feetech STS3215 servos. This is the direct
+USB/UART adapter commonly used with SO-101 robot arms; it is not the Waveshare
+ESP32 servo driver. The first test uses the keyboard. The same controller also
+accepts streamed VR yaw/pitch values.
 
 ## Safety first
 
 - Test without a camera or payload first.
 - Support the gimbal by hand and keep cables clear of both axes.
+- The adapter has no voltage regulator. Supply the voltage specified on your
+  exact STS3215 servo label (normally a suitable 2S/7.4 V-class supply), with
+  enough current for two stalled servos. Never apply 12 V to a 7.4 V servo.
+- USB-C is the data connection; power the servo bus through either the DC jack
+  or green screw terminal. Do not connect both external power inputs at once.
+- Match the servo cable to `D` (data), `V` (positive) and `G` (ground).
 - Confirm that yaw and pitch have **different servo IDs**. The example uses
   yaw `1` and pitch `2`; two factory-ID-1 servos cannot share the bus safely.
 - Set conservative `min`/`max` values in `config/gimbal.json` before enabling
@@ -19,21 +27,22 @@ the keyboard. The same controller also accepts streamed VR yaw/pitch values.
 
 ## Configuration
 
-### Put the Waveshare board in USB forwarding mode
+### Set the adapter for direct USB control
 
-The Waveshare example firmware normally controls the servos itself. For this
-Python controller, open the board's web page and start **Serial Forwarding**.
-The OLED should show `SERIAL_FORWARDING`. In the vendor example this is command
-14; alternatively set `SERIAL_FORWARDING = true` in `ServoDriver.ino` and
-upload the firmware again.
+1. With power disconnected, move the yellow control-mode jumper to **B
+   (USB)**. Position A is only for control from the separate `TX/RX/GND` UART
+   header.
+2. Connect yaw and pitch servos to either of the identical `D/V/G` sockets.
+3. Connect the correctly rated external servo supply to the DC jack **or** the
+   green screw terminal. Check polarity before applying power.
+4. Connect USB-C to the Mini PC. The onboard CH343 appears as a serial device;
+   no ESP32 firmware, web page or serial-forwarding mode is involved.
 
-The ESP32 USB serial side is `115200` baud, as set in `gimbal.json`. Its
-`Serial1` servo side remains at the STS bus rate internally. If you later
-replace the ESP32 board with a direct Waveshare bus-servo USB adapter, change
-the configured baud to the rate used by that adapter/servo bus (commonly
-`1000000`).
+The serial baud must match the connected servos. Factory STS3215 servos are
+normally `1000000` baud, which is the default in `gimbal.json`. If your SO-101
+setup deliberately changed the servo baud, put that same value in the config.
 
-Find the stable Linux port after plugging in the Waveshare adapter:
+Find the stable Linux port after plugging in the adapter:
 
 ```bash
 ls -l /dev/serial/by-id/
@@ -46,6 +55,10 @@ Copy that path into `config/gimbal.json`. Adjust:
 - `min` / `max`: measured collision-free position limits (`0..4095`).
 - `direction`: set to `-1` when an axis moves opposite to the VR input.
 - `speed`, `acceleration`, and `keyboard_step`: begin slowly.
+
+If the CH343 port exists but cannot be opened, add the user running the program
+to the Linux `dialout` group, then sign out and back in. Do not run the entire
+robot stack as root just to access a serial port.
 
 ## Keyboard test
 

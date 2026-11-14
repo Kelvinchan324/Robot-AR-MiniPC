@@ -1,6 +1,6 @@
 {
-  "port": "/dev/serial/by-id/REPLACE_WITH_WAVESHARE_ESP32_DRIVER",
-  "baud": 115200,
+  "port": "/dev/serial/by-id/REPLACE_WITH_WAVESHARE_BUS_SERVO_ADAPTER_A",
+  "baud": 1000000,
   "yaw": {
     "id": 1,
     "center": 2048,

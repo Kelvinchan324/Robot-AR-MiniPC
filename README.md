@@ -42,7 +42,7 @@ Free-form phrases use local Ollama (`bash scripts/start_ollama.sh pull`, model `
 `POST /stop` zeros the base and disconnects arm buses. `cmd_vel` times out in 500 ms. Do not expose port 8080 to the public internet.
 
 The VR gimbal is intentionally standalone while its mechanical limits and
-Waveshare adapter are being commissioned. Start with the
+Waveshare Bus Servo Adapter (A) are being commissioned. Start with the
 [`vr_gimbal` safety and keyboard guide](vr_gimbal/README.md); do not add it to
 automatic bring-up until both axes have verified IDs, directions and limits.
 
